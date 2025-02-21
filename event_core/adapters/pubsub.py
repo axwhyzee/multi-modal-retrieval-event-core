@@ -7,13 +7,7 @@ from typing import Callable, Dict, Type
 import redis
 
 from event_core.config import get_redis_connection_params
-from event_core.domain.events import (
-    ChunkStored,
-    ChunkThumbnailStored,
-    DocStored,
-    DocThumbnailStored,
-    Event,
-)
+from event_core.domain.events import Event
 
 logger = logging.getLogger(__name__)
 
@@ -22,15 +16,12 @@ CHANNELS: Dict[Type[Event], str] = {}
 EVENTS: Dict[str, Type[Event]] = {}
 
 
-def _register_event_channel(event: Type[Event]) -> None:
-    CHANNELS[event] = event.__name__
-    EVENTS[event.__name__] = event
+def _get_event_cls(channel: str) -> Type[Event]:
+    return eval(channel)
 
 
-_register_event_channel(DocStored)
-_register_event_channel(DocThumbnailStored)
-_register_event_channel(ChunkStored)
-_register_event_channel(ChunkThumbnailStored)
+def _get_channel(event_cls: Type[Event]) -> str:
+    return event_cls.__name__
 
 
 class AbstractPublisher(ABC):
@@ -71,13 +62,13 @@ class RedisConsumer(AbstractConsumer):
     def listen(self, callback: Callable[[Event], None]) -> None:
         for message in self._consumer.listen():
             data = json.loads(message["data"])
-            event_cls = EVENTS[message["channel"]]
+            event_cls = _get_event_cls(message["channel"])
             event = event_cls(**data)
             logger.info(f"Received: {event}")
             callback(event)
 
     def subscribe(self, event: Type[Event]) -> None:
-        channel = CHANNELS[event]
+        channel = _get_channel(event)
         self._consumer.subscribe(channel)
 
     def __exit__(self, *_):
