@@ -1,13 +1,5 @@
 from dataclasses import dataclass
-from enum import StrEnum
 from typing import Dict, Type
-
-
-class ObjectType(StrEnum):
-    CHUNK = "CHUNK"
-    CHUNK_THUMBNAIL = "CHUNK_THUMBNAIL"
-    DOC = "DOCUMENT"
-    DOC_THUMBNAIL = "DOCUMENT_THUMBNAIL"
 
 
 @dataclass
@@ -15,9 +7,24 @@ class Event: ...
 
 
 @dataclass
-class ObjectStored(Event):
+class _ObjStored(Event):
     obj_path: str
-    obj_type: ObjectType
+
+
+@dataclass
+class DocStored(_ObjStored): ...
+
+
+@dataclass
+class ChunkStored(_ObjStored): ...
+
+
+@dataclass
+class DocThumbnailStored(_ObjStored): ...
+
+
+@dataclass
+class ChunkThumbnailStored(_ObjStored): ...
 
 
 def _register_event(event: Type[Event]) -> None:
@@ -25,8 +32,10 @@ def _register_event(event: Type[Event]) -> None:
     EVENTS[event.__name__] = event
 
 
-# channel to event map and reverse map
 CHANNELS: Dict[Type[Event], str] = {}
 EVENTS: Dict[str, Type[Event]] = {}
 
-_register_event(ObjectStored)
+_register_event(DocStored)
+_register_event(DocThumbnailStored)
+_register_event(ChunkStored)
+_register_event(ChunkThumbnailStored)
