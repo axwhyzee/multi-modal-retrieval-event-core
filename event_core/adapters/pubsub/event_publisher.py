@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
 
 class RedisPublisher(AbstractPublisher):
     def __init__(self):
-        self._client = redis.Redis(**get_redis_connection_params())
+        self._r = redis.Redis(**get_redis_connection_params())
 
     def publish(self, event: Event) -> None:
         channel = CHANNELS[event.__class__]
         event_json = json.dumps(asdict(event))
         logger.info(f"Publishing {event_json} to channel {channel}")
-        self._client.publish(channel, event_json)
+        self._r.publish(channel, event_json)
 
     def __exit__(self, *_):
-        self._client.close()
+        self._r.close()
