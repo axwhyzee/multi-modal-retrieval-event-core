@@ -1,6 +1,6 @@
 # Event Core
 The multi-modal retrieval system is event driven, and at its core, there is the <b>Storage Service</b> and <b>Event Broker</b>.
-Since all services are coupled with the global event schema, `event-core` package serves to coordinate the event schemas and pubsub client code, reducing boilerplate code.
+Since all services are coupled with the global event schemas, `event-core` package serves to coordinate changes made to the core event schemas, pubsub clients, as well as storage client, reducing boilerplate code.
 
 ## Installation
 pip install git+https://github.com/axwhyzee/multi-modal-retrieval-event-core.git
