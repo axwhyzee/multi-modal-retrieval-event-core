@@ -16,8 +16,8 @@ class Event: ...
 
 @dataclass
 class ObjectStored(Event):
-    data_path: str
-    data_type: ObjectType
+    obj_path: str
+    obj_type: ObjectType
 
 
 def _register_event(event: Type[Event]) -> None:
