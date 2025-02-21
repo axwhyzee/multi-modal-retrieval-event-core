@@ -4,7 +4,7 @@ from typing import Dict, Type
 
 
 class ObjectType(StrEnum):
-    CHUNK = "VCHUNK"
+    CHUNK = "CHUNK"
     CHUNK_THUMBNAIL = "CHUNK_THUMBNAIL"
     DOC = "DOCUMENT"
     DOC_THUMBNAIL = "DOCUMENT_THUMBNAIL"
