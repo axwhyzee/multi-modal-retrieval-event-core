@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Callable
+from typing import Callable, Type
 
 import redis
 import redis.client
@@ -25,8 +25,8 @@ class RedisConsumer(AbstractConsumer):
             logger.info(f"Received: {event}")
             callback(event)
 
-    def subscribe(self, event: Event) -> None:
-        channel = CHANNELS[event.__class__]
+    def subscribe(self, event: Type[Event]) -> None:
+        channel = CHANNELS[event]
         self._consumer.subscribe(channel)
 
     def __exit__(self, *_):
