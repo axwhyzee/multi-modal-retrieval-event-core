@@ -2,14 +2,35 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import asdict
-from typing import Callable, Type
+from typing import Callable, Dict, Type
 
 import redis
 
 from event_core.config import get_redis_connection_params
-from event_core.domain.events import CHANNELS, EVENTS, Event
+from event_core.domain.events import (
+    ChunkStored,
+    ChunkThumbnailStored,
+    DocStored,
+    DocThumbnailStored,
+    Event,
+)
 
 logger = logging.getLogger(__name__)
+
+
+CHANNELS: Dict[Type[Event], str] = {}
+EVENTS: Dict[str, Type[Event]] = {}
+
+
+def _register_event_channel(event: Type[Event]) -> None:
+    CHANNELS[event] = event.__name__
+    EVENTS[event.__name__] = event
+
+
+_register_event_channel(DocStored)
+_register_event_channel(DocThumbnailStored)
+_register_event_channel(ChunkStored)
+_register_event_channel(ChunkThumbnailStored)
 
 
 class AbstractPublisher(ABC):
