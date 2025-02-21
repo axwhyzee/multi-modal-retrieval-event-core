@@ -26,7 +26,9 @@ class AbstractConsumer(ABC):
     def subscribe(self, event: Event) -> None:
         raise NotImplementedError
 
+    @abstractmethod
+    def __exit__(self, *_):
+        raise NotImplementedError
+
     def __enter__(self):
         return self
-
-    def __exit__(self, *_): ...
