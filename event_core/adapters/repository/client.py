@@ -22,7 +22,7 @@ class StorageClient(AbstractRepository):
         url = urljoin(self._API_URL, "add")
         res = requests.post(
             url,
-            data={"doc_id": key},
+            data={"key": key},
             files={"file": (key, BytesIO(data))},
         )
         if res.status_code != 200:
