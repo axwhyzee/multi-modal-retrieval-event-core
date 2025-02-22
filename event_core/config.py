@@ -31,7 +31,17 @@ def _get_env_var(key, converter=None):
     raise KeyError(f"Env variable {key} required")
 
 
-def get_redis_connection_params() -> Config:
+def get_redis_pubsub_connection_params() -> Config:
+    return {
+        "host": _get_env_var("REDIS_HOST"),
+        "port": _get_env_var("REDIS_PORT"),
+        "username": _get_env_var("REDIS_USERNAME"),
+        "password": _get_env_var("REDIS_PASSWORD"),
+        "decode_responses": True,
+    }
+
+
+def get_redis_mapping_connection_params() -> Config:
     return {
         "host": _get_env_var("REDIS_HOST"),
         "port": _get_env_var("REDIS_PORT"),

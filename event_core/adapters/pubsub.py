@@ -6,7 +6,7 @@ from typing import Callable, Type
 
 import redis
 
-from event_core.config import get_redis_connection_params
+from event_core.config import get_redis_pubsub_connection_params
 from event_core.domain.events import CHANNELS, EVENTS, Event
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ class AbstractConsumer(ABC):
 
 class RedisConsumer(AbstractConsumer):
     def __init__(self):
-        self._r = redis.Redis(**get_redis_connection_params())
+        self._r = redis.Redis(**get_redis_pubsub_connection_params())
         self._consumer = self._r.pubsub(ignore_subscribe_messages=True)
 
     def listen(self, callback: Callable[[Event], None]) -> None:
@@ -66,7 +66,7 @@ class RedisConsumer(AbstractConsumer):
 
 class RedisPublisher(AbstractPublisher):
     def __init__(self):
-        self._r = redis.Redis(**get_redis_connection_params())
+        self._r = redis.Redis(**get_redis_pubsub_connection_params())
 
     def publish(self, event: Event) -> None:
         channel = CHANNELS[event.__class__]
