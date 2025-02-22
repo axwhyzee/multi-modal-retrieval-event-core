@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 API_URL = get_storage_service_api_url()
 
 
-def add(data: bytes, key: str, obj_type: ObjectType) -> None:
-    logger.info(f"Storing {key} of type {obj_type}")
+def add(data: bytes, key: str, parent_key: str, obj_type: ObjectType) -> None:
+    logger.info(f"Storing {key=} {parent_key=} {obj_type}")
     url = urljoin(API_URL, "add")
     file = {"file": (key, BytesIO(data))}
     res = requests.post(
         url,
-        data={"key": key, "obj_type": obj_type},
+        data={"key": key, "parent_key": parent_key, "obj_type": obj_type},
         files=file,
     )
     if res.status_code != 200:

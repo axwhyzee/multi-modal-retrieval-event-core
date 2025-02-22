@@ -8,8 +8,8 @@ class Event: ...
 
 @dataclass
 class ObjStored(Event):
-    parent_path: str
-    obj_path: str
+    parent_key: str
+    key: str
 
 
 @dataclass
