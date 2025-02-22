@@ -14,7 +14,7 @@ load_dotenv(find_dotenv())
 
 
 T = TypeVar("T")
-Config: TypeAlias = Dict[str, Any]
+ConfigT: TypeAlias = Dict[str, Any]
 
 
 @overload
@@ -31,7 +31,7 @@ def _get_env_var(key, converter=None):
     raise KeyError(f"Env variable {key} required")
 
 
-def _get_redis_connection_params() -> Config:
+def _get_redis_connection_params() -> ConfigT:
     return {
         "host": _get_env_var("REDIS_HOST"),
         "port": _get_env_var("REDIS_PORT"),
@@ -41,11 +41,11 @@ def _get_redis_connection_params() -> Config:
     }
 
 
-def get_redis_pubsub_connection_params() -> Config:
+def get_redis_pubsub_connection_params() -> ConfigT:
     return _get_redis_connection_params()
 
 
-def get_redis_mapping_connection_params() -> Config:
+def get_redis_mapping_connection_params() -> ConfigT:
     return _get_redis_connection_params()
 
 
