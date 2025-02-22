@@ -20,7 +20,7 @@ class AbstractMapper(ABC):
     @abstractmethod
     def get(self, key: str) -> ValueT:
         raise NotImplementedError
-    
+
     @abstractmethod
     def delete(self, key: str) -> None:
         raise NotImplementedError
