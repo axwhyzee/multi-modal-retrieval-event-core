@@ -31,7 +31,7 @@ class RedisMapper(AbstractMapper):
         self._r = redis.Redis(**get_redis_mapping_connection_params())
 
     def set(self, key: str, val: ValueT) -> None:
-        self._r.set(name=key, valueT=val)
+        self._r.set(name=key, value=val)
 
     def get(self, key: str) -> ValueT:
         if (v := self._r.get(name=key)) is None:
