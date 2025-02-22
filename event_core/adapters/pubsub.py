@@ -2,22 +2,14 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import asdict
-from typing import Callable, Dict, Type
+from typing import Callable, Type
 
 import redis
 
 from event_core.config import get_redis_connection_params
-from event_core.domain.events import Event
+from event_core.domain.events import CHANNELS, EVENTS, Event
 
 logger = logging.getLogger(__name__)
-
-
-def _get_event_cls(channel: str) -> Type[Event]:
-    return eval(channel)
-
-
-def _get_channel(event_cls: Type[Event]) -> str:
-    return event_cls.__name__
 
 
 class AbstractPublisher(ABC):
@@ -58,13 +50,13 @@ class RedisConsumer(AbstractConsumer):
     def listen(self, callback: Callable[[Event], None]) -> None:
         for message in self._consumer.listen():
             data = json.loads(message["data"])
-            event_cls = _get_event_cls(message["channel"])
+            event_cls = EVENTS[message["channel"]]
             event = event_cls(**data)
             logger.info(f"Received: {event}")
             callback(event)
 
     def subscribe(self, event: Type[Event]) -> None:
-        channel = _get_channel(event)
+        channel = CHANNELS[event]
         self._consumer.subscribe(channel)
 
     def __exit__(self, *_):
@@ -77,7 +69,7 @@ class RedisPublisher(AbstractPublisher):
         self._r = redis.Redis(**get_redis_connection_params())
 
     def publish(self, event: Event) -> None:
-        channel = _get_channel(event.__class__)
+        channel = CHANNELS[event.__class__]
         event_json = json.dumps(asdict(event))
         logger.info(f"Publishing {event_json} to channel {channel}")
         self._r.publish(channel, event_json)
