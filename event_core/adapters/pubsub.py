@@ -12,10 +12,6 @@ from event_core.domain.events import Event
 logger = logging.getLogger(__name__)
 
 
-CHANNELS: Dict[Type[Event], str] = {}
-EVENTS: Dict[str, Type[Event]] = {}
-
-
 def _get_event_cls(channel: str) -> Type[Event]:
     return eval(channel)
 
@@ -81,7 +77,7 @@ class RedisPublisher(AbstractPublisher):
         self._r = redis.Redis(**get_redis_connection_params())
 
     def publish(self, event: Event) -> None:
-        channel = CHANNELS[event.__class__]
+        channel = _get_channel(event.__class__)
         event_json = json.dumps(asdict(event))
         logger.info(f"Publishing {event_json} to channel {channel}")
         self._r.publish(channel, event_json)
