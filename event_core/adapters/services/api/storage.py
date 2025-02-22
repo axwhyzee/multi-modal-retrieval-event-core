@@ -4,7 +4,10 @@ from urllib.parse import urljoin
 
 import requests
 
-from event_core.adapters.exceptions import FailedToStore, ObjectNotExists
+from event_core.adapters.services.exceptions import (
+    FailedToStore,
+    ObjectNotExists,
+)
 from event_core.config import get_storage_service_api_url
 from event_core.domain.types import ObjectType
 

@@ -4,7 +4,7 @@ from typing import TypeAlias, Union
 
 import redis
 
-from event_core.adapters.exceptions import KeyNotExists
+from event_core.adapters.services.exceptions import KeyNotExists
 from event_core.config import get_redis_mapping_connection_params
 
 logger = logging.getLogger(__name__)
