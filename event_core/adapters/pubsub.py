@@ -59,13 +59,13 @@ class RedisConsumer(AbstractConsumer):
         self._r = redis.Redis(**get_redis_connection_params())
         self._consumer = self._r.pubsub(ignore_subscribe_messages=True)
 
-    def listen(self, callback: Callable[[Event], None]) -> None:
+    def listen(self, *, callback: Callable[[Event], None], **kwargs) -> None:
         for message in self._consumer.listen():
             data = json.loads(message["data"])
             event_cls = _get_event_cls(message["channel"])
             event = event_cls(**data)
             logger.info(f"Received: {event}")
-            callback(event)
+            callback(event, **kwargs)
 
     def subscribe(self, event: Type[Event]) -> None:
         channel = _get_channel(event)
