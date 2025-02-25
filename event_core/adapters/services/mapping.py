@@ -1,8 +1,9 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import TypeAlias, Union
+from typing import Union
 
 import redis
+from typing_extensions import TypeAlias
 
 from event_core.adapters.services.exceptions import KeyNotExists
 from event_core.config import get_redis_mapping_connection_params

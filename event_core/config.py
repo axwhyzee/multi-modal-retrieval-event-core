@@ -1,14 +1,8 @@
 import os
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    TypeAlias,
-    TypeVar,
-    overload,
-)
+from typing import Any, Callable, Dict, TypeVar, overload
 
 from dotenv import find_dotenv, load_dotenv
+from typing_extensions import TypeAlias
 
 load_dotenv(find_dotenv())
 
