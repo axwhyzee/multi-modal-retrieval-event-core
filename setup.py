@@ -1,32 +1,25 @@
-from setuptools import find_packages, setup  # type: ignore
+from setuptools import find_packages, setup
 
 setup(
-    name="event_core",
-    version="1.1.0",
-    author="axwhyzee",
+    name="event_core",  # Replace with your package name
+    version="1.1.0",  # Initial version
+    author="axwhyzee",  # Author of the package
     url="https://github.com/axwhyzee/multi-modal-retrieval-event-core",
     packages=find_packages(),
     install_requires=[
-        "async-timeout==5.0.1",
         "certifi==2025.1.31",
         "charset-normalizer==3.4.1",
         "click==8.1.8",
-        "exceptiongroup==1.2.2",
         "idna==3.10",
         "iniconfig==2.0.0",
-        "mypy==1.14.1",
-        "mypy-extensions==1.0.0",
         "packaging==24.2",
         "pathspec==0.12.1",
         "platformdirs==4.3.6",
         "pluggy==1.5.0",
-        "pytest==8.3.4",
         "python-dotenv==1.0.1",
         "redis==5.2.1",
         "requests==2.32.3",
-        "tomli==2.2.1",
-        "typing-extensions==4.12.2",
-        "urllib3==2.2.3",
+        "urllib3==2.3.0",
     ],
-    python_requires=">=3.8.0",
+    python_requires=">=3.10",
 )

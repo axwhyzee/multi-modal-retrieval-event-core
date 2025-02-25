@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ObjectType(str, Enum):
+class ObjectType(StrEnum):
     CHUNK = "CHUNK"
     CHUNK_THUMBNAIL = "CHUNK_THUMBNAIL"
     DOC = "DOCUMENT"
