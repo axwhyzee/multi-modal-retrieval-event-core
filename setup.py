@@ -21,5 +21,5 @@ setup(
         "requests==2.32.3",
         "urllib3==2.3.0",
     ],
-    python_requires=">=3.10",
+    python_requires=">=3.11",
 )
