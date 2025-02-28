@@ -2,7 +2,7 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import asdict
-from typing import Callable, Type
+from typing import Callable, List, Type
 
 import redis
 
@@ -76,3 +76,11 @@ class RedisPublisher(AbstractPublisher):
 
     def __exit__(self, *_):
         self._r.close()
+
+
+class FakePublisher(AbstractPublisher):
+    def __init__(self):
+        self._published: List[Event] = []
+
+    def publish(self, event: Event) -> None:
+        self._published.append(event)
