@@ -9,20 +9,20 @@ from event_core.adapters.services.exceptions import (
     ObjectNotExists,
 )
 from event_core.config import get_storage_service_api_url
-from event_core.domain.types import ObjectType
+from event_core.domain.types import Modal, ObjectType
 
 logger = logging.getLogger(__name__)
 
 API_URL = get_storage_service_api_url()
 
 
-def add(data: bytes, key: str, obj_type: ObjectType) -> None:
-    logger.info(f"Storing {key=} {obj_type}")
+def add(data: bytes, key: str, obj_type: ObjectType, modal: Modal) -> None:
+    logger.info(f"Storing {key=} {obj_type=} {modal=}")
     url = urljoin(API_URL, "add")
     file = {"file": (key, BytesIO(data))}
     res = requests.post(
         url,
-        data={"key": key, "obj_type": obj_type},
+        data={"key": key, "obj_type": obj_type, "modal": modal},
         files=file,
     )
     if res.status_code != 200:
