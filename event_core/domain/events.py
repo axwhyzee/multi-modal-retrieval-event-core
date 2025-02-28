@@ -8,7 +8,6 @@ class Event: ...
 
 @dataclass
 class ObjStored(Event):
-    parent_key: str
     key: str
 
 
