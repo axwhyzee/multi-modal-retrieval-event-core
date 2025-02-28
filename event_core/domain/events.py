@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Dict, Type
 
+from domain.types import Modal
+
 
 @dataclass
 class Event: ...
@@ -9,6 +11,7 @@ class Event: ...
 @dataclass
 class ObjStored(Event):
     key: str
+    modal: Modal
 
 
 @dataclass
