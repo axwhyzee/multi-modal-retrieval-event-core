@@ -77,10 +77,8 @@ class FakeStorageClient(StorageClient):
     ) -> None:
         self._objects[key] = data
 
-    @abstractmethod
     def get(self, key: str) -> bytes:
         return self._objects[key]
 
-    @abstractmethod
     def delete(self, key: str) -> None:
         self._objects.pop(key)
