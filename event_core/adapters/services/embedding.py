@@ -13,48 +13,33 @@ from ...domain.types import FileExt, Modal
 logger = logging.getLogger(__name__)
 
 ModalT: TypeAlias = StrictStr
-DocsT: TypeAlias = List["DocResponse"]
-
-
-def _validate_key(key: str) -> None:
-    suffix = Path(key).suffix
-    if suffix == "":
-        raise ValueError(f"doc_key {key} has no file ext")
-    if suffix not in FileExt._value2member_map_:
-        raise ValueError(
-            f"Unsupported file ext {suffix}. Consider: "
-            f"{list(FileExt._value2member_map_.keys())}"
-        )
-
-
-class DocResponse(BaseModel):
-    doc_key: StrictStr
-    doc_thumb_key: StrictStr
-    chunk_keys: Optional[List[StrictStr]] = []
-
-    @field_validator("doc_key", "doc_thumb_key")
-    def validate_doc_key(cls, v: str) -> str:
-        _validate_key(v)
-        return v
-
-    @field_validator("chunk_keys")
-    def validate_chunk_keys(cls, v: List[str]) -> List[str]:
-        for key in v:
-            _validate_key(key)
-        return v
+DocKeysT: TypeAlias = List[str]
 
 
 class QueryResponse(BaseModel):
-    modals: Dict[ModalT, DocsT]
+    modals: Dict[ModalT, DocKeysT]
 
     @field_validator("modals")
-    def validate_modals(cls, v: Dict[ModalT, DocsT]) -> Dict[ModalT, DocsT]:
+    def validate_modals(
+        cls, v: Dict[ModalT, DocKeysT]
+    ) -> Dict[ModalT, DocKeysT]:
         for modal in Modal:
+            # validate modals
             if modal.value not in v:
                 raise ValueError(
                     f"Missing {modal=} All modals must be "
                     f"provided even if there are no docs"
                 )
+            # validate object keys
+            for key in v[modal.value]:
+                suffix = Path(key).suffix
+                if suffix == "":
+                    raise ValueError(f"doc_key {key} has no file ext")
+                if suffix not in FileExt._value2member_map_:
+                    raise ValueError(
+                        f"Unsupported file ext {suffix}. Consider: "
+                        f"{list(FileExt._value2member_map_.keys())}"
+                    )
         return v
 
 
