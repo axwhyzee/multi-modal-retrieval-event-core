@@ -1,17 +1,61 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, List, TypeAlias, Union
+from pathlib import Path
+from typing import Dict, List, Optional, TypeAlias, Union
 from urllib.parse import urljoin
 
 import requests
+from pydantic import BaseModel, StrictStr, field_validator
 
 from ...config import get_embedding_service_api_url
-from .types import JsonT
+from ...domain.types import FileExt, Modal
 
 logger = logging.getLogger(__name__)
 
-DocT: TypeAlias = Dict[str, JsonT]
-ModalT: TypeAlias = str
+ModalT: TypeAlias = StrictStr
+DocsT: TypeAlias = List["DocResponse"]
+
+
+def _validate_key(key: str) -> None:
+    suffix = Path(key).suffix
+    if suffix == "":
+        raise ValueError(f"doc_key {key} has no file ext")
+    if suffix not in FileExt._value2member_map_:
+        raise ValueError(
+            f"Unsupported file ext {suffix}. Consider: "
+            f"{list(FileExt._value2member_map_.keys())}"
+        )
+
+
+class DocResponse(BaseModel):
+    doc_key: StrictStr
+    doc_thumb_key: StrictStr
+    chunk_keys: Optional[List[StrictStr]] = []
+
+    @field_validator("doc_key", "doc_thumb_key")
+    def validate_doc_key(cls, v: str) -> str:
+        _validate_key(v)
+        return v
+
+    @field_validator("chunk_keys")
+    def validate_chunk_keys(cls, v: List[str]) -> List[str]:
+        for key in v:
+            _validate_key(key)
+        return v
+
+
+class QueryResponse(BaseModel):
+    modals: Dict[ModalT, DocsT]
+
+    @field_validator("modals")
+    def validate_modals(cls, v: Dict[ModalT, DocsT]) -> Dict[ModalT, DocsT]:
+        for modal in Modal:
+            if modal.value not in v:
+                raise ValueError(
+                    f"Missing {modal=} All modals must be "
+                    f"provided even if there are no docs"
+                )
+        return v
 
 
 class EmbeddingClient(ABC):
@@ -28,7 +72,7 @@ class EmbeddingClient(ABC):
     @abstractmethod
     def query_text(
         self, user: str, text: str, top_n: int, **kwargs
-    ) -> Dict[ModalT, List[DocT]]:
+    ) -> QueryResponse:
         """
         Given a text query made by a user, fetch the top_n most
         relevant documents.
@@ -65,7 +109,7 @@ class EmbeddingAPIClient(EmbeddingClient):
 
     def query_text(
         self, user: str, text: str, top_n: int, **kwargs
-    ) -> Dict[ModalT, List[DocT]]:
+    ) -> QueryResponse:
         logger.info(f"Query {text=} by {user=}")
         params: Dict[str, Union[str, int]] = {
             "user": user,
@@ -75,5 +119,4 @@ class EmbeddingAPIClient(EmbeddingClient):
         }
         get_endpoint = self._build_endpoint("query/text")
         res = requests.get(get_endpoint, params)
-        keys: Dict[ModalT, List[DocT]] = res.json()
-        return keys
+        return QueryResponse(modals=res.json())

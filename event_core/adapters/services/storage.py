@@ -2,7 +2,7 @@ import logging
 from collections import abc
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Dict, Tuple, Iterator
+from typing import Dict, Iterator
 from urllib.parse import urljoin
 
 import requests
