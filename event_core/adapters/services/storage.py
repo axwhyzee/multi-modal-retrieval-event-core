@@ -66,7 +66,7 @@ class StorageAPIClient(StorageClient):
     def _build_endpoint(self, *parts: str) -> str:
         url = self._api_url
         for part in parts:
-            part = part.strip("/") + "/"
+            part = "/" + part.strip("/")
             url = urljoin(url, part)
         return url
 
