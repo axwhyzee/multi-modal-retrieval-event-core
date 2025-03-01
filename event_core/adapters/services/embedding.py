@@ -13,16 +13,14 @@ from ...domain.types import FileExt, Modal
 logger = logging.getLogger(__name__)
 
 ModalT: TypeAlias = StrictStr
-DocKeysT: TypeAlias = List[str]
+KeysT: TypeAlias = List[str]
 
 
 class QueryResponse(BaseModel):
-    modals: Dict[ModalT, DocKeysT]
+    modals: Dict[ModalT, KeysT]
 
     @field_validator("modals")
-    def validate_modals(
-        cls, v: Dict[ModalT, DocKeysT]
-    ) -> Dict[ModalT, DocKeysT]:
+    def validate_modals(cls, v: Dict[ModalT, KeysT]) -> Dict[ModalT, KeysT]:
         for modal in Modal:
             # validate modals
             if modal.value not in v:
