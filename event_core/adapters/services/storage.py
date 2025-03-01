@@ -71,7 +71,7 @@ class StorageAPIClient(StorageClient):
         return url
 
     def __setitem__(self, key: str, value: Payload) -> None:
-        logger.info(f"Storing {key}: {value}")
+        logger.info(f"Storing {key}")
 
         url = self._build_endpoint("add")
         res = requests.post(
