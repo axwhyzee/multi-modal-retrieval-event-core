@@ -6,8 +6,8 @@ from typing import Callable, List, Type
 
 import redis
 
-from event_core.config import get_redis_pubsub_connection_params
-from event_core.domain.events import CHANNELS, EVENTS, Event
+from ..config import get_redis_pubsub_connection_params
+from ..domain.events import CHANNELS, EVENTS, Event
 
 logger = logging.getLogger(__name__)
 

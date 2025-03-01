@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, Type
 
-from event_core.domain.types import Modal
+from .types import Modal
 
 
 @dataclass

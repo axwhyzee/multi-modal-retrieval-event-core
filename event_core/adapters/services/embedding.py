@@ -17,7 +17,7 @@ ModalT: TypeAlias = str
 class EmbeddingClient(ABC):
     """
     ABC for interacting with Embedding Service via a client.
-    This class defines the interface for Embedding Service 
+    This class defines the interface for Embedding Service
     clients. Currently, only API client is implemented.
 
     Only the `query_text()` method is required to be implemented.
@@ -30,7 +30,7 @@ class EmbeddingClient(ABC):
         self, user: str, text: str, top_n: int, **kwargs
     ) -> Dict[ModalT, List[DocT]]:
         """
-        Given a text query made by a user, fetch the top_n most 
+        Given a text query made by a user, fetch the top_n most
         relevant documents.
 
         Args:
@@ -47,7 +47,7 @@ class EmbeddingClient(ABC):
         Returns:
             Dict[str, List[DocT]]:
                 Dict where keys are `event_core.domain.types.Modal`
-                enum values, and values are list of document objects 
+                enum values, and values are list of document objects
                 for the corresponding modal.
         """
         raise NotImplementedError
@@ -59,7 +59,7 @@ class EmbeddingAPIClient(EmbeddingClient):
     def __init__(self):
         self._api_url = get_embedding_service_api_url()
 
-    def _get_endpoint(self, endpoint: str) -> str:
+    def _build_endpoint(self, endpoint: str) -> str:
         endpoint = endpoint.strip("/")
         return urljoin(self._api_url, endpoint)
 
@@ -73,7 +73,7 @@ class EmbeddingAPIClient(EmbeddingClient):
             "top_n": top_n,
             **kwargs,
         }
-        get_endpoint = self._get_endpoint("query/text")
+        get_endpoint = self._build_endpoint("query/text")
         res = requests.get(get_endpoint, params)
         keys: Dict[ModalT, List[DocT]] = res.json()
         return keys
