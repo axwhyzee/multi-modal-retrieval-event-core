@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class Meta(StrEnum):
-    CHUNK_THUMB = "CHUNK-CHUNK_THUMB
+    CHUNK_THUMB = "CHUNK-CHUNK_THUMB"
     DOC_THUMB = "DOC-DOC_THUMB"
     FILENAME = "DOC-FILENAME"
     PARENT = "CHUNK-DOC"
