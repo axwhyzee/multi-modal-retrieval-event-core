@@ -1,5 +1,6 @@
 from enum import StrEnum
-from typing import Dict
+from pathlib import Path
+from typing import Dict, Union
 
 
 class ObjectType(StrEnum):
@@ -23,3 +24,9 @@ class FileExt(StrEnum):
     TXT = ".txt"
     PDF = ".pdf"
 
+
+def ext_from_path(path: Union[str, Path]) -> FileExt:
+    if isinstance(path, str):
+        path = Path(path)
+    suffix = path.suffix
+    return FileExt._value2member_map_[suffix]
