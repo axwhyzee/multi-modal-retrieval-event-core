@@ -1,7 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, List, Optional, TypeAlias, Union
+from typing import Dict, List, TypeAlias, Union
 from urllib.parse import urljoin
 
 import requests

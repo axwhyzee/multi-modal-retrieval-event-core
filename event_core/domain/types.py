@@ -13,7 +13,6 @@ class UnitType(StrEnum):
 class Modal(StrEnum):
     TEXT = "TEXT"
     IMAGE = "IMAGE"
-    VIDEO = "VIDEO"
 
 
 class FileExt(StrEnum):
@@ -25,7 +24,7 @@ class FileExt(StrEnum):
     PDF = ".pdf"
 
 
-PRIMITIVE_EXT_TO_MODAL: Dict[FileExt, Modal] = {
+EXT_TO_MODAL: Dict[FileExt, Modal] = {
     FileExt.TXT: Modal.TEXT,
     FileExt.JPEG: Modal.IMAGE,
     FileExt.JPG: Modal.IMAGE,
