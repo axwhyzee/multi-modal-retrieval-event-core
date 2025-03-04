@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Union, cast
 
 
-class ObjectType(StrEnum):
+class UnitType(StrEnum):
     CHUNK = "CHUNK"
     CHUNK_THUMBNAIL = "CHUNK_THUMBNAIL"
     DOC = "DOCUMENT"

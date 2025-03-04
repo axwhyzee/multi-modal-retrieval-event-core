@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 import requests
 
 from ...config import get_storage_service_api_url
-from ...domain.types import Modal, ObjectType
+from ...domain.types import Modal, UnitType
 from .exceptions import FailedToStore
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class Payload:
     """
     Payload to send over to Storage Service to add an object.
 
-    `obj_type` allows Storage Service to publish the associated
+    `type` allows Storage Service to publish the associated
     ObjectStored event.
 
     `modal` allows event handlers to handle the ObjectStored
@@ -27,7 +27,7 @@ class Payload:
     """
 
     data: bytes
-    obj_type: ObjectType
+    type: UnitType
     modal: Modal
 
 
@@ -79,7 +79,7 @@ class StorageAPIClient(StorageClient):
             url,
             data={
                 "key": key,
-                "obj_type": value.obj_type,
+                "type": value.type,
                 "modal": value.modal,
             },
             files={"file": (key, BytesIO(value.data))},
