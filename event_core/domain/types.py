@@ -1,6 +1,6 @@
 from enum import StrEnum
 from pathlib import Path
-from typing import Union, cast
+from typing import Dict, Union, cast
 
 
 class ObjectType(StrEnum):
@@ -25,7 +25,15 @@ class FileExt(StrEnum):
     PDF = ".pdf"
 
 
-def ext_from_path(path: Union[str, Path]) -> FileExt:
+PRIMITIVE_EXT_TO_MODAL: Dict[FileExt, Modal] = {
+    FileExt.TXT: Modal.TEXT,
+    FileExt.JPEG: Modal.IMAGE,
+    FileExt.JPG: Modal.IMAGE,
+    FileExt.PNG: Modal.IMAGE,
+}
+
+
+def path_to_ext(path: Union[str, Path]) -> FileExt:
     if isinstance(path, str):
         path = Path(path)
     suffix = path.suffix
