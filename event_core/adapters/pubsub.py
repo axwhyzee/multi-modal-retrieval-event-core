@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractPublisher(ABC):
+    """Defines the interface for event publishers"""
+
     @abstractmethod
     def publish(self, event: Event) -> None:
         raise NotImplementedError
@@ -24,6 +26,10 @@ class AbstractPublisher(ABC):
 
 
 class AbstractConsumer(ABC):
+    """Defines the interface for event consumers. Event consumers
+    subscribe to 1 or more channels. A single callback is provided
+    to handle events received on all channels"""
+
     @abstractmethod
     def listen(self, callback: Callable[[Event], None]) -> None:
         raise NotImplementedError
@@ -39,6 +45,7 @@ class AbstractConsumer(ABC):
 
 
 class RedisConsumer(AbstractConsumer):
+
     def __init__(self):
         self._r = redis.Redis(**get_redis_pubsub_connection_params())
         self._consumer = self._r.pubsub(ignore_subscribe_messages=True)

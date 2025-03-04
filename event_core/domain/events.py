@@ -34,6 +34,8 @@ EVENTS: Dict[str, Type[Event]] = {}
 
 
 def _register_event(event_cls: Type[Event]) -> None:
+    """Only registered events have an associated channel"""
+
     CHANNELS[event_cls] = event_cls.__name__
     EVENTS[event_cls.__name__] = event_cls
 
