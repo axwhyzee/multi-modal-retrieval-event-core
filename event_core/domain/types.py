@@ -1,6 +1,6 @@
 from enum import StrEnum
 from pathlib import Path
-from typing import Dict, Union
+from typing import Union
 
 
 class ObjectType(StrEnum):
