@@ -1,6 +1,6 @@
 from enum import StrEnum
 from pathlib import Path
-from typing import Union
+from typing import Union, cast
 
 
 class ObjectType(StrEnum):
@@ -29,4 +29,4 @@ def ext_from_path(path: Union[str, Path]) -> FileExt:
     if isinstance(path, str):
         path = Path(path)
     suffix = path.suffix
-    return FileExt._value2member_map_[suffix]
+    return cast(FileExt, FileExt._value2member_map_[suffix])
