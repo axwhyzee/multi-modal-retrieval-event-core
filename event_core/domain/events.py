@@ -11,7 +11,6 @@ class Event: ...
 @dataclass
 class ObjStored(Event):
     key: str
-    modal: Modal
 
 
 @dataclass
