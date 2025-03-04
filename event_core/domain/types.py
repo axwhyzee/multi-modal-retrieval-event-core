@@ -21,12 +21,5 @@ class FileExt(StrEnum):
     PNG = ".png"
     MP4 = ".mp4"
     TXT = ".txt"
+    PDF = ".pdf"
 
-
-MODAL_FACTORY: Dict[FileExt, Modal] = {
-    FileExt.JPG: Modal.IMAGE,
-    FileExt.JPEG: Modal.IMAGE,
-    FileExt.PNG: Modal.IMAGE,
-    FileExt.MP4: Modal.VIDEO,
-    FileExt.TXT: Modal.TEXT,
-}
