@@ -24,9 +24,7 @@ class EmbeddingClient(ABC):
     """
 
     @abstractmethod
-    def query_text(
-        self, user: str, text: str, top_n: int, **kwargs
-    ) -> KeysT:
+    def query_text(self, user: str, text: str, top_n: int, **kwargs) -> KeysT:
         """
         Given a text query made by a user, fetch the top_n most
         relevant documents.
@@ -59,9 +57,7 @@ class EmbeddingAPIClient(EmbeddingClient):
         endpoint = endpoint.strip("/")
         return urljoin(self._api_url, endpoint)
 
-    def query_text(
-        self, user: str, text: str, top_n: int, **kwargs
-    ) -> KeysT:
+    def query_text(self, user: str, text: str, top_n: int, **kwargs) -> KeysT:
         logger.info(f"Query {text=} by {user=}")
         params: Dict[str, Union[str, int]] = {
             "user": user,

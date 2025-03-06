@@ -64,7 +64,6 @@ class RedisConsumer(AbstractConsumer):
 
     def __exit__(self, *_):
         self._r.close()
-        self._consumer.close()
 
 
 class RedisPublisher(AbstractPublisher):
@@ -75,7 +74,7 @@ class RedisPublisher(AbstractPublisher):
         channel = CHANNELS[event.__class__]
         event_json = json.dumps(asdict(event))
         logger.info(f"Publishing {event_json} to channel {channel}")
-        self._r.publish(channel, event_json)
+        self._r.rpush(channel, event_json)
 
     def __exit__(self, *_):
         self._r.close()
