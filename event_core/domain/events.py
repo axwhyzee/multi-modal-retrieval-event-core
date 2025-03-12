@@ -32,7 +32,7 @@ class DocThumbnailStored(ObjStored): ...
 
 
 @dataclass
-class ChunkThumbnailStored(ObjStored): ...
+class ElementThumbnailStored(ObjStored): ...
 
 
 @dataclass
@@ -65,6 +65,6 @@ def _register_event(event_cls: Type[Event]) -> None:
 _register_event(PlotElementStored)
 _register_event(TextElementStored)
 _register_event(ImageElementStored)
-_register_event(ChunkThumbnailStored)
+_register_event(ElementThumbnailStored)
 _register_event(DocStored)
 _register_event(DocThumbnailStored)
