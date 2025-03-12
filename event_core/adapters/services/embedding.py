@@ -32,17 +32,17 @@ class EmbeddingClient(ABC):
         Args:
             user (str):
                 User making the request. Used in generating the
-                corresponding namesapce for vector database queries
+                corresponding namespace for vector database queries
             text (str):
                 Query text
             top_n (int):
-                Specify number of top most relevant documents
+                Specify number of top most relevant elements
             **kwargs:
                 Additional optional query params
 
         Returns:
             KeysT:
-                List of chunk keys
+                List of element keys
         """
         raise NotImplementedError
 

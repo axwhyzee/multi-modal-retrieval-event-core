@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 import requests
 
 from ...config import get_storage_service_api_url
-from ...domain.types import UnitType
+from ...domain.types import RepoObject
 from .exceptions import FailedToStore
 
 logger = logging.getLogger(__name__)
@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Payload:
-    """Wrapper of object data and unit type"""
+    """Wrapper of object data and RepoObject enum"""
 
     data: bytes
-    type: UnitType
+    type: RepoObject
 
 
 class StorageClient(abc.MutableMapping):

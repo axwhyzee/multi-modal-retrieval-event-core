@@ -3,11 +3,19 @@ from pathlib import Path
 from typing import Dict, Union, cast
 
 
-class UnitType(StrEnum):
-    CHUNK = "CHUNK"
-    CHUNK_THUMBNAIL = "CHUNK_THUMBNAIL"
+class RepoObject: ...
+
+
+class Asset(RepoObject, StrEnum):
     DOC = "DOCUMENT"
     DOC_THUMBNAIL = "DOCUMENT_THUMBNAIL"
+    ELEM_THUMBNAIL = "ELEMENT_THUMBNAIL"
+
+
+class Element(RepoObject, StrEnum):
+    PLOT = "PLOT_ELEMENT"
+    TEXT = "TEXT_ELEMENT"
+    IMAGE = "IMAGE_ELEMENT"
 
 
 class Modal(StrEnum):
@@ -29,6 +37,12 @@ EXT_TO_MODAL: Dict[FileExt, Modal] = {
     FileExt.JPEG: Modal.IMAGE,
     FileExt.JPG: Modal.IMAGE,
     FileExt.PNG: Modal.IMAGE,
+}
+
+ELEM_TO_MODAL: Dict[Element, Modal] = {
+    Element.PLOT: Modal.TEXT,
+    Element.TEXT: Modal.TEXT,
+    Element.IMAGE: Modal.IMAGE,
 }
 
 
