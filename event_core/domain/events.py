@@ -62,6 +62,7 @@ def _register_event(event_cls: Type[Event]) -> None:
     EVENTS[event_cls.__name__] = event_cls
 
 
+_register_event(ElementStored)
 _register_event(PlotElementStored)
 _register_event(TextElementStored)
 _register_event(ImageElementStored)
