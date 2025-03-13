@@ -2,7 +2,7 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import asdict
-from typing import Callable, List, Optional, Type
+from typing import Callable, List, Type
 
 import redis
 
@@ -16,7 +16,13 @@ class AbstractPublisher(ABC):
     """Defines the interface for event publishers"""
 
     @abstractmethod
-    def publish(self, event: Event, channel: Optional[str] = None) -> None:
+    def publish(self, event: Event) -> None:
+        """
+        Publish an event to the message queue
+
+        Args:
+            event (Event): Event payload
+        """
         raise NotImplementedError
 
     def __exit__(self, *_): ...
@@ -26,16 +32,32 @@ class AbstractPublisher(ABC):
 
 
 class AbstractConsumer(ABC):
-    """Defines the interface for event consumers. Event consumers
+    """
+    Defines the interface for event consumers. Event consumers
     subscribe to 1 or more channels. A single callback is provided
-    to handle events received on all channels"""
+    to handle events received on all channels
+    """
 
     @abstractmethod
     def listen(self, callback: Callable[[Event], None]) -> None:
+        """
+        Listen to multiple message queues at once, using the same
+        callback to handle all events
+        
+        Args:
+            callback (Callable[[Event], None]): 
+                Callback to handle events as they arrive
+        """
         raise NotImplementedError
 
     @abstractmethod
     def subscribe(self, event: Type[Event]) -> None:
+        """
+        Subscribe to one or more message queues
+
+        Args:
+            event (Type[Event]): Class of event to subscribe to
+        """
         raise NotImplementedError
 
     def __exit__(self, *_): ...
@@ -47,7 +69,7 @@ class AbstractConsumer(ABC):
 class RedisConsumer(AbstractConsumer):
 
     def __init__(self):
-        self._r = redis.Redis(**get_redis_pubsub_connection_params())
+        self._r = redis.asyncio.Redis(**get_redis_pubsub_connection_params())
         self._channels: List[str] = []
 
     def listen(self, callback: Callable[[Event], None]) -> None:
@@ -70,8 +92,8 @@ class RedisPublisher(AbstractPublisher):
     def __init__(self):
         self._r = redis.Redis(**get_redis_pubsub_connection_params())
 
-    def publish(self, event: Event, channel: Optional[str] = None) -> None:
-        channel = channel or CHANNELS[event.__class__]
+    def publish(self, event: Event) -> None:
+        channel = CHANNELS[event.__class__]
         event_json = json.dumps(asdict(event))
         logger.info(f"Publishing {event_json} to channel {channel}")
         self._r.rpush(channel, event_json)
@@ -84,5 +106,5 @@ class FakePublisher(AbstractPublisher):
     def __init__(self):
         self._published: List[Event] = []
 
-    def publish(self, event: Event, channel: Optional[str] = None) -> None:
+    def publish(self, event: Event) -> None:
         self._published.append(event)
