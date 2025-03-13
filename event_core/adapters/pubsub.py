@@ -2,7 +2,7 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import asdict
-from typing import Callable, List, Type, Optional
+from typing import Callable, List, Optional, Type
 
 import redis
 
@@ -16,7 +16,7 @@ class AbstractPublisher(ABC):
     """Defines the interface for event publishers"""
 
     @abstractmethod
-    def publish(self, event: Event, channel: Optional[Event] = None) -> None:
+    def publish(self, event: Event, channel: Optional[str] = None) -> None:
         raise NotImplementedError
 
     def __exit__(self, *_): ...
@@ -70,7 +70,7 @@ class RedisPublisher(AbstractPublisher):
     def __init__(self):
         self._r = redis.Redis(**get_redis_pubsub_connection_params())
 
-    def publish(self, event: Event, channel: Optional[Event] = None) -> None:
+    def publish(self, event: Event, channel: Optional[str] = None) -> None:
         channel = channel or CHANNELS[event.__class__]
         event_json = json.dumps(asdict(event))
         logger.info(f"Publishing {event_json} to channel {channel}")
@@ -84,5 +84,5 @@ class FakePublisher(AbstractPublisher):
     def __init__(self):
         self._published: List[Event] = []
 
-    def publish(self, event: Event, channel: Optional[Event] = None) -> None:
+    def publish(self, event: Event, channel: Optional[str] = None) -> None:
         self._published.append(event)
