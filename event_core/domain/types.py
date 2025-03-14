@@ -31,6 +31,7 @@ class FileExt(StrEnum):
     TXT = ".txt"
     PDF = ".pdf"
     MD = ".md"
+    PY = ".py"
 
 
 EXT_TO_MODAL: Dict[FileExt, Modal] = {
