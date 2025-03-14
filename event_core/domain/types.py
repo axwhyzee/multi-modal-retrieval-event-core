@@ -30,6 +30,7 @@ class FileExt(StrEnum):
     MP4 = ".mp4"
     TXT = ".txt"
     PDF = ".pdf"
+    MD = ".md"
 
 
 EXT_TO_MODAL: Dict[FileExt, Modal] = {
