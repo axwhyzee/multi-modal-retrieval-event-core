@@ -15,7 +15,9 @@ class Meta(StrEnum):
     DOC_THUMB = "DOC-DOC_THUMB"
     FILENAME = "DOC-FILENAME"
     PARENT = "CHUNK-DOC"
-    UPLOAD_T = "DOC-UPLOAD_TIME"
+    FRAME_SECONDS = "ELEM-FRAME-SECONDS"
+    PAGE = "ELEM-PAGE"
+    COORDS = "ELEM-COORDS"
 
 
 class AbstractNamespace(abc.MutableMapping):
