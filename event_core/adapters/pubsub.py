@@ -69,7 +69,7 @@ class AbstractConsumer(ABC):
 class RedisConsumer(AbstractConsumer):
 
     def __init__(self):
-        self._r = redis.asyncio.Redis(**get_redis_pubsub_connection_params())
+        self._r = redis.Redis(**get_redis_pubsub_connection_params())
         self._channels: List[str] = []
 
     def listen(self, callback: Callable[[Event], None]) -> None:
