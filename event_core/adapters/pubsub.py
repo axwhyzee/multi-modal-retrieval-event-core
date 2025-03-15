@@ -43,9 +43,9 @@ class AbstractConsumer(ABC):
         """
         Listen to multiple message queues at once, using the same
         callback to handle all events
-        
+
         Args:
-            callback (Callable[[Event], None]): 
+            callback (Callable[[Event], None]):
                 Callback to handle events as they arrive
         """
         raise NotImplementedError

@@ -10,46 +10,15 @@ elements, where elements are chunks of data with well-defined
 boundaries, extracted from the parent document.
 """
 
-from dataclasses import dataclass
 from typing import Dict, Type
 
-
-@dataclass
-class Event: ...
-
-
-@dataclass
-class ObjStored(Event):
-    key: str
-
-
-@dataclass
-class DocStored(ObjStored): ...
-
-
-@dataclass
-class DocThumbnailStored(ObjStored): ...
-
-
-@dataclass
-class ElementThumbnailStored(ObjStored): ...
-
-
-@dataclass
-class ElementStored(ObjStored): ...
-
-
-@dataclass
-class PlotElementStored(ElementStored): ...
-
-
-@dataclass
-class TextElementStored(ElementStored): ...
-
-
-@dataclass
-class ImageElementStored(ElementStored): ...
-
+from .base import DocStored, DocThumbnailStored, ElementThumbnailStored, Event
+from .elements import (
+    ElementStored,
+    ImageElementStored,
+    PlotElementStored,
+    TextElementStored,
+)
 
 CHANNELS: Dict[Type[Event], str] = {}
 EVENTS: Dict[str, Type[Event]] = {}

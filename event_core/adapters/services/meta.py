@@ -93,10 +93,9 @@ class RedisNamespace(AbstractNamespace):
         self._r.hset(self._name, key, value)
 
     def __getitem__(self, key: str) -> str:
-        val = self._r.hget(self._name, key)
-        if val is None:
-            raise KeyError(f"Key {key} does not exist")
-        return cast(str, val)
+        if val := self._r.hget(self._name, key):
+            return cast(str, val)
+        raise KeyError(f"Key {key} does not exist")
 
     def __delitem__(self, key: str) -> None:
         self._r.hdel(self._name, key)

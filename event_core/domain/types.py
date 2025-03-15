@@ -1,6 +1,26 @@
+"""
+A document contains:
+ - Assets
+   - Document: Full document data
+   - Document thumbnail (Optional): Thumbnail of document
+   - Element thumbnails (optional): Thumbnails of elements
+
+  - Elements (at least 1)
+   - Image elements
+   - Text elements
+   - Plot elements
+   - Code elements
+
+A single file can contain elements of multiple element types.
+
+E.g.,
+- A PDF can contain images, texts and plots
+- A Markdown can contain codes and texts
+"""
+
 from enum import StrEnum
 from pathlib import Path
-from typing import Dict, Union, cast
+from typing import Union, cast
 
 
 class RepoObject: ...
@@ -13,14 +33,10 @@ class Asset(RepoObject, StrEnum):
 
 
 class Element(RepoObject, StrEnum):
-    PLOT = "PLOT_ELEMENT"
-    TEXT = "TEXT_ELEMENT"
-    IMAGE = "IMAGE_ELEMENT"
-
-
-class Modal(StrEnum):
+    PLOT = "PLOT"
     TEXT = "TEXT"
     IMAGE = "IMAGE"
+    CODE = "CODE"
 
 
 class FileExt(StrEnum):
@@ -32,20 +48,6 @@ class FileExt(StrEnum):
     PDF = ".pdf"
     MD = ".md"
     PY = ".py"
-
-
-EXT_TO_MODAL: Dict[FileExt, Modal] = {
-    FileExt.TXT: Modal.TEXT,
-    FileExt.JPEG: Modal.IMAGE,
-    FileExt.JPG: Modal.IMAGE,
-    FileExt.PNG: Modal.IMAGE,
-}
-
-ELEM_TO_MODAL: Dict[Element, Modal] = {
-    Element.PLOT: Modal.TEXT,
-    Element.TEXT: Modal.TEXT,
-    Element.IMAGE: Modal.IMAGE,
-}
 
 
 def path_to_ext(path: Union[str, Path]) -> FileExt:
