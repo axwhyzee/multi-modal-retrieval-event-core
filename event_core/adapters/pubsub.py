@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from abc import ABC, abstractmethod
@@ -5,6 +6,7 @@ from dataclasses import asdict
 from typing import Callable, List, Type
 
 import redis
+import redis.asyncio
 
 from ..config import get_redis_pubsub_connection_params
 from ..domain.events import CHANNELS, EVENTS, Event
@@ -69,16 +71,26 @@ class AbstractConsumer(ABC):
 class RedisConsumer(AbstractConsumer):
 
     def __init__(self):
-        self._r = redis.Redis(**get_redis_pubsub_connection_params())
+        self._r = redis.asyncio.Redis(**get_redis_pubsub_connection_params())
         self._channels: List[str] = []
 
-    def listen(self, callback: Callable[[Event], None]) -> None:
+    async def _worker(self, channel: str, callback: Callable[[Event], None]):
         while True:
-            channel, event = self._r.blpop(self._channels)
+            channel, event = await self._r.blpop([channel])
             logger.info(f"Processing {channel}: {event}")
             event_cls = EVENTS[channel]
             event = event_cls(**json.loads(event))
             callback(event)
+
+    def listen(self, callback: Callable[[Event], None]) -> None:
+        async def run():
+            workers = [
+                asyncio.create_task(self._worker(channel, callback))
+                for channel in self._channels
+            ]
+            await asyncio.gather(*workers)
+
+        asyncio.run(run())
 
     def subscribe(self, event: Type[Event]) -> None:
         channel = CHANNELS[event]
