@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+from typing import Dict, Type
 
+from ..types import Element
 from .base import ObjStored
 
 
@@ -21,3 +23,11 @@ class ImageElementStored(ElementStored): ...
 
 @dataclass
 class CodeElementStored(ElementStored): ...
+
+
+ELEM_TYPES: Dict[Type[ElementStored], Element] = {
+    PlotElementStored: Element.PLOT,
+    TextElementStored: Element.TEXT,
+    ImageElementStored: Element.IMAGE,
+    CodeElementStored: Element.CODE,
+}

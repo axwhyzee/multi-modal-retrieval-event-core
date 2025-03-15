@@ -14,11 +14,11 @@ from typing import Dict, Type
 
 from .base import DocStored, DocThumbnailStored, ElementThumbnailStored, Event
 from .elements import (
+    CodeElementStored,
     ElementStored,
     ImageElementStored,
     PlotElementStored,
     TextElementStored,
-    CodeElementStored
 )
 
 CHANNELS: Dict[Type[Event], str] = {}
