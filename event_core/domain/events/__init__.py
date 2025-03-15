@@ -18,6 +18,7 @@ from .elements import (
     ImageElementStored,
     PlotElementStored,
     TextElementStored,
+    CodeElementStored
 )
 
 CHANNELS: Dict[Type[Event], str] = {}
@@ -38,3 +39,4 @@ _register_event(ImageElementStored)
 _register_event(ElementThumbnailStored)
 _register_event(DocStored)
 _register_event(DocThumbnailStored)
+_register_event(CodeElementStored)
