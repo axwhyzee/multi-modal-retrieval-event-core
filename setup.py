@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="event_core",
-    version="1.4.3",
+    version="1.4.4",
     author="axwhyzee",
     url="https://github.com/axwhyzee/multi-modal-retrieval-event-core",
     packages=find_packages(),

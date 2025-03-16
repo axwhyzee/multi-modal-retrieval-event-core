@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, List, TypeAlias, Union
+from typing import Dict, List, Optional, TypeAlias, Union
 from urllib.parse import urljoin
 
 import requests
@@ -24,7 +24,14 @@ class EmbeddingClient(ABC):
     """
 
     @abstractmethod
-    def query_text(self, user: str, text: str, top_n: int, **kwargs) -> KeysT:
+    def query_text(
+        self,
+        user: str,
+        text: str,
+        top_n: int,
+        exclude_elems: Optional[List[str]] = None,
+        **kwargs,
+    ) -> KeysT:
         """
         Given a text query made by a user, fetch the top_n most
         relevant documents.
@@ -37,6 +44,8 @@ class EmbeddingClient(ABC):
                 Query text
             top_n (int):
                 Specify number of top most relevant elements
+            exclude_elems (Optinoal[List[str]]):
+                Exclude elements types from search
             **kwargs:
                 Additional optional query params
 
@@ -57,7 +66,14 @@ class EmbeddingAPIClient(EmbeddingClient):
         endpoint = endpoint.strip("/")
         return urljoin(self._api_url, endpoint)
 
-    def query_text(self, user: str, text: str, top_n: int, **kwargs) -> KeysT:
+    def query_text(
+        self,
+        user: str,
+        text: str,
+        top_n: int,
+        exclude_elems: Optional[List[str]] = None,
+        **kwargs,
+    ) -> KeysT:
         logger.info(f"Query {text=} by {user=}")
         params: Dict[str, Union[str, int]] = {
             "user": user,
@@ -65,6 +81,8 @@ class EmbeddingAPIClient(EmbeddingClient):
             "top_n": top_n,
             **kwargs,
         }
+        if exclude_elems:
+            params["exclude_elems"] = exclude_elems
         get_endpoint = self._build_endpoint("query/text")
         res = requests.get(get_endpoint, params)
         return res.json()
