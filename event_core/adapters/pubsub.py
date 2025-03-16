@@ -3,7 +3,7 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import asdict
-from typing import Callable, List, Type
+from typing import Callable, List, Set, Type
 
 import redis
 import redis.asyncio
@@ -71,30 +71,23 @@ class AbstractConsumer(ABC):
 class RedisConsumer(AbstractConsumer):
 
     def __init__(self):
-        self._r = redis.asyncio.Redis(**get_redis_pubsub_connection_params())
-        self._channels: List[str] = []
+        self._r = redis.Redis(**get_redis_pubsub_connection_params())
+        self._channels: Set[str] = set()
+        self._tasks: List[asyncio.Task] = []
 
-    async def _worker(self, channel: str, callback: Callable[[Event], None]):
+    def listen(self, callback: Callable[[Event], None]) -> None:
+        channels = list(self._channels)
         while True:
-            channel, event = await self._r.blpop([channel])
+            channel, event = self._r.blpop(channels)
             logger.info(f"Processing {channel}: {event}")
             event_cls = EVENTS[channel]
             event = event_cls(**json.loads(event))
             callback(event)
 
-    def listen(self, callback: Callable[[Event], None]) -> None:
-        async def run():
-            workers = [
-                asyncio.create_task(self._worker(channel, callback))
-                for channel in self._channels
-            ]
-            await asyncio.gather(*workers)
-
-        asyncio.run(run())
-
     def subscribe(self, event: Type[Event]) -> None:
-        channel = CHANNELS[event]
-        self._channels.append(channel)
+        if not (channel := CHANNELS[event]):
+            raise KeyError(f"{event} is not registered")
+        self._channels.add(channel)
 
     def __exit__(self, *_):
         self._r.close()

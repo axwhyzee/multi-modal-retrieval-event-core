@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, TypeAlias, Union
+from typing import Any, Dict, List, Optional, TypeAlias
 from urllib.parse import urljoin
 
 import requests
@@ -75,7 +75,7 @@ class EmbeddingAPIClient(EmbeddingClient):
         **kwargs,
     ) -> KeysT:
         logger.info(f"Query {text=} by {user=}")
-        params: Dict[str, Union[str, int]] = {
+        params: Dict[str, Any] = {
             "user": user,
             "text": text,
             "top_n": top_n,
